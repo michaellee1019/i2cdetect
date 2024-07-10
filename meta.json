@@ -1,6 +1,6 @@
 {
   "module_id": "michaellee1019:i2cdetect",
-  "visibility": "private",
+  "visibility": "public",
   "url": "https://github.com/michaellee1019/i2cdetect",
   "description": "A Viam module that returns all active i2c addresses as sensor values. Useful for troubleshooting wiring and connection issues without having to install software or SSH into the device.",
   "models": [
