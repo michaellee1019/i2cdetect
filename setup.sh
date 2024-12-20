@@ -28,7 +28,6 @@ source .env
 if [ -f $VIRTUAL_ENV/.install_complete ]; then
 	echo "completion marker is present, skipping virtualenv setup"
 else
-	sudo apt install -y git
 	echo creating virtualenv at $VIRTUAL_ENV
 	python3 -m venv $VIRTUAL_ENV
 	echo installing dependencies from requirements.txt

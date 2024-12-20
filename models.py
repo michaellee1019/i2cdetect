@@ -9,7 +9,7 @@ import smbus2
 
 class i2cdetect(Sensor):
     MODEL = "michaellee1019:i2cdetect:i2cdetect"
-    i2c_bus = None
+    i2c_bus: int = 1
 
     @classmethod
     def new(self, config: ComponentConfig, dependencies: Mapping[ResourceName, ResourceBase]) -> Self:
@@ -20,7 +20,8 @@ class i2cdetect(Sensor):
     def reconfigure(self,
                     config: ComponentConfig,
                     dependencies: Mapping[ResourceName, ResourceBase]):
-        self.i2c_bus = int(config.attributes.fields["i2c_bus"].number_value)
+        if config.attributes.fields["i2c_bus"].number_value:
+            self.i2c_bus = int(config.attributes.fields["i2c_bus"].number_value)
 
     async def get_readings(self, **kwargs):
         bus = smbus2.SMBus(self.i2c_bus)
