@@ -6,7 +6,9 @@
   "models": [
     {
 	    "api": "rdk:component:sensor",
-      "model": "michaellee1019:i2cdetect:i2cdetect"
+      "model": "michaellee1019:i2cdetect:i2cdetect",
+      "short_description": "Returns all active i2c addresses as sensor values. Equivalent to the i2cdetect command without ssh.",
+      "markdown_link": "README.md#model-i2cdetect"
     }
   ],
   "build": {
