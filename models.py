@@ -8,7 +8,7 @@ import sys
 import smbus2
 
 class i2cdetect(Sensor):
-    MODEL = "michaellee1019:i2cdetect:i2cdetect"
+    MODEL = "michaellee1019-2:i2cdetect-renamed:i2cdetect"
     i2c_bus: int = 1
 
     @classmethod
