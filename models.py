@@ -1,13 +1,19 @@
-import viam_wrap
+import asyncio
+import subprocess
 from viam.components.sensor import Sensor
 from viam.proto.app.robot import ComponentConfig
 from typing import Mapping, Self
+from viam.module.module import Module
 from viam.proto.common import ResourceName
 from viam.resource.base import ResourceBase
-import sys
+from viam.resource.easy_resource import EasyResource
 import smbus2
 
-class i2cdetect(Sensor):
+from viam import logging
+
+LOGGER = logging.getLogger(__name__)
+
+class i2cdetect(Sensor, EasyResource):
     MODEL = "michaellee1019-2:i2cdetect-renamed:i2cdetect"
     i2c_bus: int = 1
 
@@ -34,10 +40,35 @@ class i2cdetect(Sensor):
                 pass
         return {"active": active}
 
-if __name__ == '__main__':
-    # necessary for pyinstaller to see it
-    # build this with: 
-    # pyinstaller --onefile --hidden-import viam-wrap --paths $VIRTUAL_ENV/lib/python3.10/site-packages installable.py 
-    # `--paths` arg may no longer be necessary once viam-wrap is published somewhere
-    # todo: utility to append this stanza automatically at build time
-    viam_wrap.main(sys.modules.get(__name__))
+def check_and_enable_i2c():
+    try:
+        # Check the current I2C configuration
+        result = subprocess.run(
+            ["sudo", "raspi-config", "nonint", "get_i2c"],
+            capture_output=True,
+            text=True,
+            check=True,
+        )
+
+        # Get the returned output and strip any whitespace
+        i2c_status = result.stdout.strip()
+
+        # If the status is 1, enable I2C
+        if i2c_status == "1":
+            LOGGER.info("I2C is disabled. Enabling it now...")
+            subprocess.run(
+                ["sudo", "raspi-config", "nonint", "do_i2c", "0"], check=True
+            )
+            LOGGER.info("I2C has been enabled.")
+        else:
+            LOGGER.info("I2C is already enabled.")
+
+    except subprocess.CalledProcessError as e:
+        LOGGER.error(f"Error executing command: {e}")
+        LOGGER.error(f"Output: {e.output}")
+    except Exception as e:
+        LOGGER.error(f"An unexpected error occurred: {e}")
+
+if __name__ == "__main__":
+    check_and_enable_i2c()
+    asyncio.run(Module.run_from_registry())
