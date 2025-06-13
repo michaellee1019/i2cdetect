@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: viamrobotics/build-action@v1
+      - uses: viamrobotics/build-action@ml/viam-module-update
         with:
           # note: you can replace this line with 'version: ""' if
           # you want to test the build process without deploying
